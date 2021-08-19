@@ -17,7 +17,7 @@ func Run() {
 	e.POST("/login", service.Login)
 	r := e.Group("/api")
 	r.Use(middleware.JWTWithConfig(middleware.JWTConfig{
-		TokenLookup:   "cookie:token",
+		TokenLookup:   "cookie:token, header:Authorization, query:token",
 		SigningMethod: middleware.AlgorithmHS256,
 		SigningKey:    util.Secret,
 	}))
