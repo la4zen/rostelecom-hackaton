@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"fmt"
+
 	"github.com/la4zen/rostelecom-hackaton/pkg/models"
 	"github.com/la4zen/rostelecom-hackaton/pkg/store"
 )
@@ -11,11 +13,15 @@ type Handler struct {
 }
 
 func New(store *store.Store) *Handler {
-	_rooms := []*models.Room{}
+	_rooms := []models.Room{}
 	rooms := map[uint]*models.Room{}
-	store.DB.Find(&_rooms)
-	for _, room := range rooms {
-		rooms[room.ID] = room
+	res := store.DB.Find(&_rooms)
+	fmt.Print(res)
+	for _, room := range _rooms {
+		room.Clients = map[uint]*models.Client{}
+		room.EventListener = make(chan models.Event)
+		go room.Listen()
+		rooms[room.ID] = &room
 	}
 	return &Handler{
 		Rooms: rooms,

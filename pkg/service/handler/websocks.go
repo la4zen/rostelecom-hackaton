@@ -15,15 +15,15 @@ var upgrader = websocket.Upgrader{
 	EnableCompression: true,
 }
 
-func (h *Handler) WSHandler(c echo.Context, roomid uint, user *models.User) error {
+func (h *Handler) WSHandler(c echo.Context, roomid uint, user *models.User) {
 	ws, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
-		return c.String(500, err.Error())
+		return
 	}
 	defer ws.Close()
 	client := &models.Client{
 		WS:   ws,
 		User: user,
 	}
-	return h.Rooms[roomid].Connect(client)
+	h.Rooms[roomid].Connect(client)
 }

@@ -3,7 +3,7 @@ package service
 import (
 	"strconv"
 
-	"github.com/golang-jwt/jwt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/la4zen/rostelecom-hackaton/pkg/models"
 	"github.com/labstack/echo"
 )
@@ -22,5 +22,6 @@ func (s *Service) Connect(c echo.Context) error {
 	if s.Handler.Rooms[uint(id)] == nil {
 		return c.String(404, "room not found")
 	}
-	return s.Handler.WSHandler(c, uint(id), user)
+	go s.Handler.WSHandler(c, uint(id), user)
+	return nil
 }

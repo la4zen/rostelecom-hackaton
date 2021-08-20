@@ -10,10 +10,10 @@ import (
 var Secret = []byte("SecretKEYYERTYjmazerngwaqenrigsdefg")
 
 func GenerateToken(user *models.User) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, models.Claims{
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &models.Claims{
 		ID: user.ID,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(24 * time.Hour * 9999).Unix(),
+			ExpiresAt: time.Now().Add(24 * time.Hour * 7).Unix(),
 		},
 	})
 	t, err := token.SignedString(Secret)
