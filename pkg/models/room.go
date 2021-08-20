@@ -1,11 +1,11 @@
 package models
 
 type Room struct {
-	ID            uint `gorm:"primary"`
+	ID            uint `gorm:"primary" json:"id,omitempty"`
 	RoomName      string
 	Content       string
-	Clients       []*Client
-	EventListener chan Event
+	Clients       []*Client  `gorm:"-"`
+	EventListener chan Event `gorm:"-"`
 }
 
 func (r *Room) Listen() {

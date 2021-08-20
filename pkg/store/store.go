@@ -17,7 +17,7 @@ func New() *Store {
 	if err != nil {
 		log.Fatal(err)
 	}
-	_db.AutoMigrate(&models.User{})
+	_db.AutoMigrate(&models.User{}, &models.Room{})
 	return &Store{
 		DB: _db,
 	}
