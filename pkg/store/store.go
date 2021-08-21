@@ -13,7 +13,7 @@ type Store struct {
 }
 
 func New() *Store {
-	_db, err := gorm.Open(postgres.Open("host=localhost user=postgres password=897+897 sslmode=disable database=rostelecom"))
+	_db, err := gorm.Open(postgres.Open("host=database user=postgres password=12345 sslmode=disable database=postgres"))
 	if err != nil {
 		log.Fatal(err)
 	}

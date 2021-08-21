@@ -4,8 +4,9 @@ type Room struct {
 	ID            uint `gorm:"primary" json:"id,omitempty"`
 	RoomName      string
 	Content       string
-	Clients       map[uint]*Client `gorm:"-"`
-	EventListener chan Event       `gorm:"-"`
+	Contents      map[string]interface{} `gorm:"-"`
+	Clients       map[uint]*Client       `gorm:"-"`
+	EventListener chan Event             `gorm:"-"`
 }
 
 func (r *Room) Listen() {
@@ -32,6 +33,10 @@ func (r *Room) RemoveClient(client *Client) {
 		return
 	}
 	delete(r.Clients, client.User.ID)
+	r.EventListener <- map[string]interface{}{
+		"event_type": "leave",
+		"user_id":    client.User.ID,
+	}
 }
 
 func (r *Room) Connect(client *Client) {
@@ -41,6 +46,7 @@ func (r *Room) Connect(client *Client) {
 	for {
 		err = client.WS.ReadJSON(&data)
 		if err != nil {
+			r.RemoveClient(client)
 			return
 		}
 		r.EventListener <- data

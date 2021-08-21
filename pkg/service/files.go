@@ -38,5 +38,5 @@ func (s *Service) Load(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.HTML(200, string(content))
+	return c.String(200, string(content))
 }
