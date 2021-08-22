@@ -14,12 +14,16 @@ func Run() {
 	service := service.New(store)
 	e := echo.New()
 	e.Use(middleware.Logger())
-	e.Use(middleware.CORS())
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+		AllowOrigins:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		AllowCredentials: true,
+		AllowMethods:     []string{"*"},
+	}))
+	e.Use(middleware.Recover())
 	e.Static("/", "/static")
 	e.PUT("/register", service.Register)
 	e.POST("/login", service.Login)
-	e.POST("/upload", service.Upload)
-	e.GET("/load", service.Load)
 	r := e.Group("/api")
 	{
 		r.Use(middleware.JWTWithConfig(middleware.JWTConfig{
@@ -28,6 +32,7 @@ func Run() {
 			Claims:      &models.Claims{},
 		}))
 		r.GET("/rooms/:id", service.Connect)
+		r.GET("/rooms", service.GetRooms)
 	}
 	e.Logger.Fatal(e.Start(":8080"))
 }

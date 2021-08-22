@@ -1,3 +1,6 @@
 package models
 
-type Event interface{}
+type Event struct {
+	User  User
+	Event map[string]interface{}
+}
